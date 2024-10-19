@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <div id="top">
+            <div id="location"> <img style="height: 18px; margin-left: 2px; margin-top: 6px;"  src="location.png" alt=""> </div>
+            <input id="input" placeholder="Enter your location" type="text">
+            <button id="button"> <img  style="height: 20px; margin-top: 6px;" src="search-regular-24.png" alt=""> </button>
+        </div>
+        <div id="box">
+            <div style="background-image: url(cloud.png);" id="photo" ></div>
+            <div id="temp">18 <span><sup>°C</sup></span> </div>
+            <div id="description">Overcast Clouds</div>
+            <div id="box2">
+                <img style="height: 50px;"  src="water-regular-24.png">
+                <div id="humid">  55% <br>Humidity</div>
+                <img style="height: 50px;" src="wind-regular-24.png">
+                <div id="wind">  4Km/h<br>Wind Speed</div>
+            </div> 
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+const temp=document.getElementById('temp')
+const description=document.getElementById('description')
+const humid=document.getElementById('humid')
+const wind=document.getElementById('wind')
+const search=document.getElementById('button')
+const input=document.getElementById('input')
+const photo=document.getElementById('photo')
+
+
+search.onclick=async function(){
+    const ApiKey= "e1e575ad652d06e7c8e3f915ca4b34b1";
+    const URL=`https://api.openweathermap.org/data/2.5/weather?q=${input.value}&appid=${ApiKey}`;
+
+
+    try {
+        const response=await fetch(URL);
+        const data= await response.json();
+        temp.innerText=`${(data.main.temp-273.15).toFixed(2)} °C`;
+        wind.innerText=`${data.wind.speed} Km/h Wind Speed`
+        humid.innerText=`${data.main.humidity}% Humidity`
+        description.innerText=`${data.weather[0].description}`
+
+
+        if(description.innerText==="overcast clouds"  || description.innerText==="broken clouds"){
+            photo.style.backgroundImage='url("cloud.png")';
+        }
+        else if(description.innerText==="clear sky"){
+            photo.style.backgroundImage='url("clear.png")';
+        }
+        else if(description.innerText==="haze"){
+            photo.style.backgroundImage='url("mist.png")';
+        }
+        else if(description.innerText==="light rain"   ||  description.innerText==="light intensity shower rain"){
+            photo.style.backgroundImage='url("rain.png")';
+        }
+        else if(description.innerText==="snow"){
+            photo.style.backgroundImage='url("snow.png")';
+        }
+
+    } catch (error) {
+        console.error("Error fetching location",error);
+    }
+}
+
+</script>
+</html>  
